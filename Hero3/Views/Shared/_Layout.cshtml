@@ -1,0 +1,106 @@
+﻿@using Hero3.Core.Models
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>@ViewData["Title"] - Hero3</title>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+	<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,600,700" />
+
+
+	<!--end::Fonts-->
+	<!--begin::Global Stylesheets Bundle (used by all pages)-->
+	<link rel="stylesheet" href="~/assets/css/plugins.bundle.css" asp-append-version="true" />
+	<link rel="stylesheet" href="~/assets/css/style.bundle.css" asp-append-version="true" />
+
+
+	<!--end::Global Stylesheets Bundle-->
+	<!-- Optional project-specific styles -->
+	<link rel="stylesheet" href="~/Hero3.styles.css" asp-append-version="true" />
+
+
+
+</head>
+
+
+<body id="kt_body" class="header-fixed header-tablet-and-mobile-fixed aside-fixed aside-secondary-disabled">
+	<!--begin::Main-->
+	<!--begin::Root-->
+    @inject SignInManager<ApplicationUser> SignInManager
+
+    @{
+        var path = Context.Request.Path.Value.ToLower();
+        bool hideHeaderAside = path.Contains("/identity/account/login") || path.Contains("/identity/account/register");
+    }
+
+    <div class="d-flex flex-column flex-root">
+        <!--begin::Page-->
+        <div class="page d-flex flex-row flex-column-fluid">
+
+            <!--begin::Wrapper-->
+            <div class="wrapper d-flex flex-column flex-row-fluid" id="kt_wrapper">
+
+                @* Show Header and Aside only if logged in and not in login/register *@
+                @if (SignInManager.IsSignedIn(User) && !hideHeaderAside)
+                {
+                    <header>
+                        @await Html.PartialAsync("_Header")
+                    </header>
+
+                    <aside>
+                        @await Html.PartialAsync("_Aside")
+                    </aside>
+                }
+
+                <!--begin::Content-->
+                <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+                    <!--begin::Container-->
+                    <div class="container" id="kt_content_container">
+                        <main role="main">
+                            @RenderBody()
+                        </main>
+                    </div>
+                    <!--end::Container-->
+                </div>
+                <!--end::Content-->
+                <!--begin::Footer-->
+                <div class="footer py-4 d-flex flex-lg-column" id="kt_footer">
+                </div>
+                <!--end::Footer-->
+            </div>
+            <!--end::Wrapper-->
+        </div>
+        <!--end::Page-->
+    </div>
+    <!--end::Root-->
+
+	<!--begin::Drawers-->
+	<!--begin::Activities drawer-->
+	<div id="kt_activities" class="bg-white" data-kt-drawer="true" data-kt-drawer-name="activities" data-kt-drawer-activate="true" data-kt-drawer-overlay="true" data-kt-drawer-width="{default:'300px', 'lg': '900px'}" data-kt-drawer-direction="end" data-kt-drawer-toggle="#kt_activities_toggle" data-kt-drawer-close="#kt_activities_close">
+		<div class="card shadow-none">
+			
+		</div>
+	</div>
+	<!--end::Activities drawer-->
+
+	<!--end::Drawers-->
+
+	<!--end::Main-->
+@*     <script>var hostUrl = "assets/";</script>
+ *@    <!--begin::Global Javascript Bundle(used by all pages)-->
+    <script src="~/assets/js/plugins.bundle.js"></script>
+    <script src="~/assets/js/scripts.bundle.js"></script>
+    <!--end::Global Javascript Bundle-->
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
+<partial name="_ValidationScriptsPartial" />

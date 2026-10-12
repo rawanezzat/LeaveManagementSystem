@@ -1,0 +1,373 @@
+﻿@using Hero3.Core.Models
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<ApplicationUser> UserManager
+
+@{
+	var currentUser = await UserManager.GetUserAsync(User);
+}
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<ApplicationUser> UserManager
+
+@{
+	var isManager = User.IsInRole("Manager") || User.IsInRole("HR") || User.IsInRole("Admin");
+}
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+
+			<div class="modal-header">
+				<h5 class="modal-title" id="searchModalLabel">Search Leave Requests</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+
+			<form asp-controller="LeaveRequests" asp-action="Search" method="get">
+				<div class="modal-body">
+					<div class="mb-3">
+						<label class="form-label">Start Date</label>
+						<input type="date" name="RequestStartDate" class="form-control" />
+					</div>
+
+					<div class="mb-3">
+						<label class="form-label">End Date</label>
+						<input type="date" name="RequestEndDate" class="form-control" />
+					</div>
+
+					<div class="mb-3">
+						<label class="form-label">Status</label>
+						<input type="text" name="RequestStatus" class="form-control" />
+					</div>
+
+					<div class="mb-3">
+						<label class="form-label">Reason</label>
+						<input type="text" name="Reason" class="form-control" />
+					</div>
+
+					<div class="mb-3">
+						<label class="form-label">Medical Issuer</label>
+						<input type="text" name="MedicalCertificateIssuer" class="form-control" />
+					</div>
+
+					@if (isManager)
+					{
+						<div class="mb-3">
+							<label class="form-label">Employee Name</label>
+							<input type="text" name="UserName" class="form-control" />
+						</div>
+					}
+				</div>
+
+				<div class="modal-footer">
+					<button type="submit" class="btn btn-primary">Search</button>
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<!--begin::Container-->
+	<div class="container-fluid d-flex align-items-stretch justify-content-between" id="kt_header_container">
+	<!--begin::Logo-->
+	<div class="z-30 flex flex-row items-center justify-between">
+		<a href="https://hero-group.ch/en" class="my-6 lg:my-0">
+			<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="132" height="40">
+				<defs>
+					<path id="a" d="M0 .042h42.43v36.709H0z"></path>
+					<path id="c" d="M.215.075h27.608v39.75H.215z"></path>
+				</defs>
+				<g fill="#00328c" fill-rule="evenodd">
+					<path class="fill-current" d="M52.513 21.19c1.394-3.169 4.473-5.385 8.055-5.385 3.574 0 6.658 2.216 8.046 5.385H52.513zM60.568 10c-7.985 0-14.454 6.719-14.454 15.006 0 8.295 6.47 14.994 14.454 14.994 5.72 0 10.658-3.441 13-8.459a1.06 1.06 0 00-.054-.984.981.981 0 00-.826-.464h-3.73c-.61 0-1.189.267-1.57.756-1.618 2.045-4.078 3.36-6.82 3.36-4.543 0-8.281-3.557-8.798-8.123h22.202c.563 0 1.03-.482 1.03-1.08C75.003 16.72 68.547 10 60.569 10zm55.486 24.207c-4.894 0-8.857-4.116-8.857-9.204 0-5.087 3.963-9.204 8.857-9.204 4.895 0 8.854 4.117 8.854 9.204 0 5.088-3.959 9.204-8.854 9.204m0-24.207c-7.98 0-14.443 6.714-14.443 15.003 0 8.283 6.464 14.997 14.443 14.997 7.977 0 14.446-6.714 14.446-14.997 0-8.29-6.469-15.003-14.446-15.003"></path>
+					<g transform="translate(.5 2.308)">
+						<mask id="b" fill="#fff">
+							<use xlink:href="#a"></use>
+						</mask>
+						<path class="fill-current" d="M23.887.042V.78c0 .483.356.898.83.986l.914.198v12.633h-8.795V1.933l.932-.167a.98.98 0 00.81-.967V.042c-3.261.062-6.466.112-9.667.112C5.762.154 3.1.104 0 .042V.78c0 .483.364.898.84.986l1.362.192v32.909l-1.343.18a.988.988 0 00-.86.98v.724c2.987-.117 5.653-.117 8.8-.117 3.2 0 6.463 0 9.778.117v-.768a.975.975 0 00-.79-.973l-.95-.186V19.377h8.794v15.478l-.891.192a.98.98 0 00-.853.98v.724c3.21-.117 5.934-.117 9.195-.117 3.252 0 6.087 0 9.348.117v-.756a.997.997 0 00-.822-.98l-1.343-.222V1.958l1.331-.192A1.01 1.01 0 0042.43.78V.042c-3.43.062-6.376.112-9.626.112-3.215 0-5.881-.05-8.917-.112" mask="url(#b)"></path>
+					</g>
+					<g transform="translate(78.044)">
+						<mask id="d" fill="#fff">
+							<use xlink:href="#c"></use>
+						</mask>
+						<path class="fill-current" d="M17.82 38.05l-1.157-.234V14.494c2.102-.031 6.031-.347 9.216-4.062C29.384 6.34 27.865.68 23.599.142c-4.252-.53-5.843 2.16-6.85 4.788-1.004 2.64-1.364 3.411-2.257 5.218-.16.341-.319.6-.471.828-.278.271-.516.379-.674.41-1.445.019-2.88.026-4.319.026-3.114 0-5.753-.045-8.813-.108v.745c0 .5.344.929.82.998l1.127.184v24.7l-1.114.157c-.486.063-.833.487-.833.998v.739c2.943-.12 5.586-.12 8.704-.12 3.176 0 6.413 0 9.694.12v-.783c0-.499-.332-.903-.792-.992" mask="url(#d)"></path>
+					</g>
+				</g>
+			</svg>
+		</a>
+		<button class="flex items-center justify-center w-12 h-12 p-1 my-8 outline-none lg:hidden focus:outline-none" type="button" hidden="">
+			<template x-if="navOpen">
+				<svg aria-hidden="true" focusable="false" data-prefix="fas" class="flex-1 w-auto h-8" data-icon="times" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 352 512">
+					<path fill="currentColor" d="M242.72 256l100.07-100.07c12.28-12.28 12.28-32.19 0-44.48l-22.24-22.24c-12.28-12.28-32.19-12.28-44.48 0L176 189.28 75.93 89.21c-12.28-12.28-32.19-12.28-44.48 0L9.21 111.45c-12.28 12.28-12.28 32.19 0 44.48L109.28 256 9.21 356.07c-12.28 12.28-12.28 32.19 0 44.48l22.24 22.24c12.28 12.28 32.2 12.28 44.48 0L176 322.72l100.07 100.07c12.28 12.28 32.2 12.28 44.48 0l22.24-22.24c12.28-12.28 12.28-32.19 0-44.48L242.72 256z"></path>
+				</svg>
+			</template>
+			<template x-if="!navOpen">
+				<svg fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" class="flex-1">
+					<path fill-rule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"></path>
+				</svg>
+			</template><svg fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" class="flex-1">
+				<path fill-rule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"></path>
+			</svg>
+		</button>
+	</div>
+	<!--end::Logo-->
+		<!--begin::Page title-->
+		<div class="page-title d-flex flex-column align-items-start justify-content-center flex-wrap me-lg-2 pb-2 pb-lg-0" data-kt-swapper="true" data-kt-swapper-mode="prepend" data-kt-swapper-parent="{default: '#kt_content_container', lg: '#kt_header_container'}">
+			</div>
+		<!--end::Page title=-->
+		<!--begin::Wrapper-->
+		
+	<!--begin::Toolbar wrapper-->
+		<div class="d-flex align-items-stretch flex-shrink-0">
+
+			@* rawan search *@
+			<!--begin::Search-->
+
+
+		<div id="kt_header_search" class="d-flex align-items-stretch">
+
+			<div class="d-flex align-items-center">
+				<a asp-controller="LeaveRequests" asp-action="Index"
+				   class="btn btn-icon btn-active-light-primary"
+				   title="Dashboard"
+				   data-bs-toggle="tooltip" data-bs-trigger="hover"
+				   data-bs-dismiss="click" data-bs-placement="right">
+
+					<span class="svg-icon svg-icon-1">
+						<i class="bi bi-house fs-3"></i>
+
+					</span>
+				</a>
+			</div>
+
+
+			<!-- Search toggle -->
+			<div class="d-flex align-items-center">
+				<button class="btn btn-icon btn-active-light-primary" data-bs-toggle="modal" data-bs-target="#searchModal">
+					<i class="bi bi-search fs-3"></i>
+				</button>
+			</div>
+
+
+			<!-- Search menu -->
+			<div class="menu menu-sub menu-sub-dropdown p-4 w-325px" id="kt_header_search_content" style="display:none;">
+				<!-- Search form -->
+				<form id="kt_search_form" class="position-relative mb-3" autocomplete="off">
+					<input type="text" id="kt_search_input" class="form-control ps-10" placeholder="Search..." />
+					<span id="kt_search_clear" class="btn btn-sm btn-light position-absolute end-0 top-50 translate-middle-y d-none">
+						&times;
+					</span>
+				</form>
+
+				<!-- Results -->
+				<div id="kt_search_results" class="text-muted text-center py-5">
+					Type to search...
+				</div>
+			</div>
+		</div>
+		<!--end::Search-->
+			@* rawan4cards *@
+			<!--begin::Quick links-->
+			<div class="d-flex align-items-center ms-1 ms-lg-3">
+				<!--begin::Menu wrapper-->
+				<div class="btn btn-icon btn-active-light-primary w-30px h-30px w-md-40px h-md-40px" data-kt-menu-trigger="click" data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end" data-kt-menu-flip="bottom">
+					<!--begin::Svg Icon | path: icons/duotone/Layout/Layout-4-blocks.svg-->
+					<span class="svg-icon svg-icon-1">
+						<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+							<g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+								<rect x="0" y="0" width="24" height="24" />
+								<rect fill="#000000" x="4" y="4" width="7" height="7" rx="1.5" />
+								<path d="M5.5,13 L9.5,13 C10.3284271,13 11,13.6715729 11,14.5 L11,18.5 C11,19.3284271 10.3284271,20 9.5,20 L5.5,20 C4.67157288,20 4,19.3284271 4,18.5 L4,14.5 C4,13.6715729 4.67157288,13 5.5,13 Z M14.5,4 L18.5,4 C19.3284271,4 20,4.67157288 20,5.5 L20,9.5 C20,10.3284271 19.3284271,11 18.5,11 L14.5,11 C13.6715729,11 13,10.3284271 13,9.5 L13,5.5 C13,4.67157288 13.6715729,4 14.5,4 Z M14.5,13 L18.5,13 C19.3284271,13 20,13.6715729 20,14.5 L20,18.5 C20,19.3284271 19.3284271,20 18.5,20 L14.5,20 C13.6715729,20 13,19.3284271 13,18.5 L13,14.5 C13,13.6715729 13.6715729,13 14.5,13 Z" fill="#000000" opacity="0.3" />
+							</g>
+						</svg>
+					</span>
+					<!--end::Svg Icon-->
+				</div>
+				<!--begin::Menu-->
+				<div class="menu menu-sub menu-sub-dropdown menu-column w-250px w-lg-325px" data-kt-menu="true">
+					<!--begin::Heading-->
+					<div class="d-flex flex-column flex-center bgi-no-repeat rounded-top px-9 py-10" style="background-image:url('assets/media//misc/pattern-2.jpg')">
+						<!--begin::Title-->
+						<h3 class="text-white fw-bold mb-3">Quick Links</h3>
+						<!--end::Title-->
+						<!--begin::Status-->
+					<span class="badge bg-success py-2 px-3">
+						@ViewBag.PendingCount pending Requests
+					</span>
+					<!--end::Status-->
+					</div>
+					<!--end::Heading-->
+					<!--begin:Nav-->
+					<div class="row g-0">
+						<!--begin:Item-->
+						<div class="col-6">
+						<a asp-controller="LeaveRequests" asp-action="Pending" class="d-flex flex-column flex-center h-100 p-6 bg-hover-light border-end border-bottom">
+								<!--begin::Svg Icon | path: icons/duotone/Communication/Group.svg-->
+								<span >
+									<i class="bi bi-hourglass-split fs-2 text-warning"></i>
+								</span>
+								<!--end::Svg Icon-->
+								<span class="fs-5 fw-bold text-gray-800 mb-0">pending</span>
+								<span class="fs-7 text-gray-400">pending requests</span>
+							</a>
+						</div>
+						<!--end:Item-->
+						<!--begin:Item-->
+						<div class="col-6">
+						<a asp-controller="LeaveRequests" asp-action="Approved" class="d-flex flex-column flex-center h-100 p-6 bg-hover-light border-end">
+								<!--begin::Svg Icon | path: icons/duotone/Shopping/Box2.svg-->
+								<span class="svg-icon svg-icon-3x svg-icon-success mb-2">
+									<span>
+										<i class="bi bi-check-circle fs-2 text-success"></i>
+									</span>
+								</span>
+								<!--end::Svg Icon-->
+								<span class="fs-5 fw-bold text-gray-800 mb-0">approved</span>
+								<span class="fs-7 text-gray-400 ">approve requests</span>
+							</a>
+						</div>
+						<!--end:Item-->
+						<!--begin:Item-->
+						<div class="col-6">
+						<a asp-controller="LeaveRequests" asp-action="Rejected" class="d-flex flex-column flex-center h-100 p-6 bg-hover-light border-end">
+							<span class="svg-icon svg-icon-3x svg-icon-success mb-2">
+								<span>
+									<i class="bi bi-x-circle fs-2 text-danger"></i>
+								</span>
+							</span>
+							<span class="fs-5 fw-bold text-gray-800 mb-0">rejected</span>
+							<span class="fs-7 text-gray-400">rejected requests</span>
+						</a>
+					</div>
+						
+
+					</div>
+					<!--end:Nav-->
+					@* rawan *@
+					<!--begin::View more-->
+					<div class="py-2 text-center border-top">
+					<a asp-controller="LeaveRequests" asp-action="Index" asp-route-viewAll="true" class="btn btn-color-gray-600 btn-active-color-primary">
+						View All
+
+
+							<!--begin::Svg Icon | path: icons/duotone/Navigation/Right-2.svg-->
+							<span class="svg-icon svg-icon-5">
+								<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+									<g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+										<polygon points="0 0 24 0 24 24 0 24" />
+										<rect fill="#000000" opacity="0.5" transform="translate(8.500000, 12.000000) rotate(-90.000000) translate(-8.500000, -12.000000)" x="7.5" y="7.5" width="2" height="9" rx="1" />
+										<path d="M9.70710318,15.7071045 C9.31657888,16.0976288 8.68341391,16.0976288 8.29288961,15.7071045 C7.90236532,15.3165802 7.90236532,14.6834152 8.29288961,14.2928909 L14.2928896,8.29289093 C14.6714686,7.914312 15.281055,7.90106637 15.675721,8.26284357 L21.675721,13.7628436 C22.08284,14.136036 22.1103429,14.7686034 21.7371505,15.1757223 C21.3639581,15.5828413 20.7313908,15.6103443 20.3242718,15.2371519 L15.0300721,10.3841355 L9.70710318,15.7071045 Z" fill="#000000" fill-rule="nonzero" transform="translate(14.999999, 11.999997) scale(1, -1) rotate(90.000000) translate(-14.999999, -11.999997)" />
+									</g>
+								</svg>
+							</span>
+							<!--end::Svg Icon-->
+						</a>
+					</div>
+					<!--end::View more-->
+				</div>
+				<!--end::Menu-->
+				<!--end::Menu wrapper-->
+			</div>
+			<!--end::Quick links-->
+			
+			<!--begin::Notifications-->
+			<div class="d-flex align-items-center ms-1 ms-lg-3">
+				<!--begin::Menu wrapper-->
+			<!--begin::User-->
+			<div class="d-flex align-items-center ms-1 ms-lg-3" id="kt_header_user_menu_toggle">
+				<!--begin::Menu wrapper-->
+				<div class="cursor-pointer symbol symbol-30px symbol-md-40px" data-kt-menu-trigger="click" data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end" data-kt-menu-flip="bottom">
+					<img src="~/assets/images/user.png" alt="metronic" />
+				</div>
+				<!--begin::Menu-->
+				<div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold py-4 fs-6 w-275px" data-kt-menu="true">
+					<!--begin::Menu item-->
+					<div class="menu-item px-3">
+
+						<div class="menu-content d-flex align-items-center px-3">
+							<!--begin::Avatar-->
+							<div class="symbol symbol-50px me-5">
+								<img alt="Logo" src="~/assets/images/user.png" />
+							</div>
+							<!--end::Avatar-->
+							<!--begin::Username-->
+							<div class="d-flex flex-column">
+								<div class="fw-bolder d-flex align-items-center fs-5">
+									@currentUser?.UserName
+								</div>
+								<a class="fw-bold text-muted text-hover-primary fs-7">
+									@currentUser?.Email
+								</a>
+							</div>
+
+							<!--end::Username-->
+							<!--begin::Menu item-->
+							
+						</div>   
+						<div class="menu-item px-5">
+
+						     <form id="SignOut" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="/Identity/Account/Login" method="post">
+                                 <a  type="submit" class="menu-link px-5 js-signout">Logout</a>
+                             </form>
+						</div>
+					</div>
+					<!--end::Menu item-->
+					
+					
+		<!--end::Toolbar wrapper-->
+	</div>
+	<!--end::Container-->
+</div>
+</div>
+</div>
+</div>
+<script>
+	document.addEventListener("DOMContentLoaded", function () {
+		const searchToggle = document.querySelector('[data-kt-search-element="toggle"]');
+		const searchContent = document.querySelector('[data-kt-search-element="content"]');
+		const searchInput = searchContent.querySelector('[data-kt-search-element="input"]');
+		const searchResults = searchContent.querySelector('[data-kt-search-element="main"]');
+		const searchEmpty = searchContent.querySelector('[data-kt-search-element="empty"]');
+
+		// Toggle search dropdown
+		searchToggle.addEventListener("click", () => {
+			searchContent.classList.toggle("d-none");
+			searchInput.focus();
+		});
+
+		// Handle input
+		searchInput.addEventListener("input", async function () {
+			const query = searchInput.value.trim();
+
+			if (query.length < 2) {
+				searchResults.innerHTML = "";
+				searchEmpty.classList.add("d-none");
+				return;
+			}
+
+			// Simulate async search; replace with your backend API
+			const results = await fakeSearch(query);
+
+			if (results.length === 0) {
+				searchResults.innerHTML = "";
+				searchEmpty.classList.remove("d-none");
+			} else {
+				searchEmpty.classList.add("d-none");
+				searchResults.innerHTML = results
+					.map(item => `<div class="py-2">${item}</div>`)
+					.join("");
+			}
+		});
+
+		// Fake search function (replace with real AJAX call)
+		function fakeSearch(query) {
+			const data = ["Leave Request", "Dashboard", "Employee Profile", "Settings"];
+			return new Promise(resolve => {
+				setTimeout(() => {
+					resolve(data.filter(x => x.toLowerCase().includes(query.toLowerCase())));
+				}, 200);
+			});
+		}
+	});
+</script>

@@ -1,0 +1,89 @@
+﻿@model Hero.Models.LeaveType
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>LeaveType</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="LeaveTypeId" />
+            <div class="form-group">
+                <label asp-for="TypeName" class="control-label"></label>
+                <input asp-for="TypeName" class="form-control" />
+                <span asp-validation-for="TypeName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MaxDaysPerYear" class="control-label"></label>
+                <input asp-for="MaxDaysPerYear" class="form-control" />
+                <span asp-validation-for="MaxDaysPerYear" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MaxConsecutiveDays" class="control-label"></label>
+                <input asp-for="MaxConsecutiveDays" class="form-control" />
+                <span asp-validation-for="MaxConsecutiveDays" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MinNoticeDays" class="control-label"></label>
+                <input asp-for="MinNoticeDays" class="form-control" />
+                <span asp-validation-for="MinNoticeDays" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MaxHoursPerRequest" class="control-label"></label>
+                <input asp-for="MaxHoursPerRequest" class="form-control" />
+                <span asp-validation-for="MaxHoursPerRequest" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MaxTimesPerMonth" class="control-label"></label>
+                <input asp-for="MaxTimesPerMonth" class="form-control" />
+                <span asp-validation-for="MaxTimesPerMonth" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="RequiresApproval" /> @Html.DisplayNameFor(model => model.RequiresApproval)
+                </label>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="RequiresMedicalNote" /> @Html.DisplayNameFor(model => model.RequiresMedicalNote)
+                </label>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="RequiresAttachment" /> @Html.DisplayNameFor(model => model.RequiresAttachment)
+                </label>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="MustUsePaidLeaveFirst" /> @Html.DisplayNameFor(model => model.MustUsePaidLeaveFirst)
+                </label>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="IsUnpaid" /> @Html.DisplayNameFor(model => model.IsUnpaid)
+                </label>
+            </div>
+            <div class="form-group">
+                <label asp-for="Notes" class="control-label"></label>
+                <input asp-for="Notes" class="form-control" />
+                <span asp-validation-for="Notes" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

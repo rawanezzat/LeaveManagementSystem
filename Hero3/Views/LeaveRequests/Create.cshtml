@@ -1,0 +1,139 @@
+﻿@model Hero.Models.LeaveRequest
+
+@{
+    ViewData["Title"] = "Create Leave Request";
+}
+
+<div class="d-flex align-items-center mb-6">
+    <i class="bi bi-file-earmark-plus text-primary fs-2 me-2"></i>
+    <h1 class="fw-bold text-dark m-0">Create Leave Request</h1>
+</div>
+
+<div class="card shadow-lg border-0 rounded-4">
+    <div class="card-body p-5">
+        <div asp-validation-summary="All" class="text-danger"></div>
+
+        <form asp-action="AddNew" asp-controller="LeaveRequests" method="post" enctype="multipart/form-data">
+            <div class="row g-4">
+                <!-- Start Date -->
+                <div class="col-md-6">
+                    <label asp-for="RequestStartDate" class="form-label fw-semibold text-muted"></label>
+                    <input asp-for="RequestStartDate" class="form-control form-control-lg form-control-solid" type="date" />
+                    <span asp-validation-for="RequestStartDate" class="text-danger"></span>
+                </div>
+
+                <!-- End Date -->
+                <div class="col-md-6">
+                    <label asp-for="RequestEndDate" class="form-label fw-semibold text-muted"></label>
+                    <input asp-for="RequestEndDate" class="form-control form-control-lg form-control-solid" type="date" />
+                    <span asp-validation-for="RequestEndDate" class="text-danger"></span>
+                </div>
+
+                <!-- Personal Leave Start/End Hours -->
+                <div class="col-md-6" id="personalStartField">
+                    <label asp-for="PersonalStartTime" class="form-label fw-bold">Start Time</label>
+                    <input asp-for="PersonalStartTime" class="form-control form-control-solid" type="time" />
+                    <span asp-validation-for="PersonalStartTime" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6" id="personalEndField">
+                    <label asp-for="PersonalEndTime" class="form-label fw-bold">End Time</label>
+                    <input asp-for="PersonalEndTime" class="form-control form-control-solid" type="time" />
+                    <span asp-validation-for="PersonalEndTime" class="text-danger"></span>
+                </div>
+
+
+                <!-- Leave Type -->
+                <div class="col-md-6">
+                    <label asp-for="LeaveTypeId" class="form-label fw-semibold text-muted"></label>
+                    <select asp-for="LeaveTypeId" id="LeaveTypeId"
+                            class="form-select form-select-lg form-select-solid"
+                            asp-items="ViewBag.LeaveTypesSelectList">
+                        <option value="">-- Select Leave Type --</option>
+                    </select>
+
+
+                    <span asp-validation-for="LeaveTypeId" class="text-danger"></span>
+                </div>
+
+                <!-- Reason -->
+                <div class="col-12">
+                    <label asp-for="Reason" class="form-label fw-semibold text-muted"></label>
+                    <textarea asp-for="Reason" class="form-control form-control-lg form-control-solid" rows="3"></textarea>
+                </div>
+
+              
+
+                <!-- Attachment -->
+                <div class="col-md-6" id="attachmentField">
+                    <label asp-for="AttachmentPath" class="form-label fw-bold"></label>
+                    <input id="AttachmentPath" name="attachmentFile" class="form-control form-control-solid" type="file" />
+                    <span asp-validation-for="AttachmentPath" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6" id="medicalIssuerField">
+                    <label asp-for="MedicalCertificateIssuer" class="form-label fw-bold"></label>
+                    <input asp-for="MedicalCertificateIssuer" class="form-control form-control-solid" />
+                    <span asp-validation-for="MedicalCertificateIssuer" class="text-danger"></span>
+                </div>
+
+
+            </div>
+
+            <!-- Buttons -->
+            <div class="mt-5 d-flex justify-content-end gap-3">
+                <a asp-action="Index" asp-controller="LeaveRequests" class="btn btn-light btn-lg px-4">
+                    <i class="bi bi-arrow-left me-2"></i> Back
+                </a>
+                <button type="submit" class="btn btn-primary btn-lg px-5 shadow-sm">
+                    <i class="bi bi-send-check-fill me-2"></i> Submit Request
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const leaveTypeSelect = document.getElementById("LeaveTypeId");
+            const medicalField = document.getElementById("medicalIssuerField");
+            const attachField = document.getElementById("attachmentField");
+            const attachInput = document.getElementById("AttachmentPath");
+
+            const personalStartField = document.getElementById("personalStartField");
+            const personalEndField = document.getElementById("personalEndField");
+
+            function toggleFields() {
+                const selectedText = leaveTypeSelect.options[leaveTypeSelect.selectedIndex]?.text;
+
+                medicalField.style.display = "none";
+                attachField.style.display = "none";
+                personalStartField.style.display = "none";
+                personalEndField.style.display = "none";
+                attachInput.removeAttribute("required");
+
+                if (selectedText === "Sick Leave") {
+                    medicalField.style.display = "block";
+                    attachField.style.display = "block";
+                    attachInput.setAttribute("required", "required");
+                }
+                else if (selectedText === "Emergency Leave") {
+                    attachField.style.display = "block";
+                }
+                               else if (selectedText.toLowerCase().includes("personal")) {
+            personalStartField.style.display = "block";
+            personalEndField.style.display = "block";
+        }
+
+
+
+            }
+
+            leaveTypeSelect.addEventListener("change", toggleFields);
+            toggleFields();
+        });
+    </script>
+}
+
+

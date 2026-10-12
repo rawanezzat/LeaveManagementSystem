@@ -1,0 +1,19 @@
+﻿@model Hero.Models.LeaveRequest
+
+<form asp-action="DeleteCurrent" method="post">
+    <input type="hidden" asp-for="LeaveRequestId" />
+
+    <p>
+        Are you sure you want to delete the request from
+        <strong>@Model.RequestStartDate.ToString("yyyy-MM-dd")</strong>
+        to
+        <strong>@Model.RequestEndDate.ToString("yyyy-MM-dd")</strong>?
+    </p>
+
+    <div class="text-end">
+            <input type="hidden" asp-for="LeaveRequestId" />
+            <button type="submit" class="btn btn-danger">
+                <i class="bi bi-trash3 me-1"></i> Yes, Delete
+            </button>
+    </div>
+</form>

@@ -1,0 +1,40 @@
+﻿@model Hero.Models.LeaveRequest
+
+<dl class="row">
+    <dt class="col-sm-4">Employee</dt>
+    <dd class="col-sm-8">@Model.ApplicationUser?.UserName</dd>
+
+    <dt class="col-sm-4">Leave Type</dt>
+    <dd class="col-sm-8">@Model.LeaveType?.TypeName</dd>
+
+    <dt class="col-sm-4">Start Date</dt>
+    <dd class="col-sm-8">@Model.RequestStartDate.ToString("yyyy-MM-dd")</dd>
+
+    <dt class="col-sm-4">End Date</dt>
+    <dd class="col-sm-8">@Model.RequestEndDate.ToString("yyyy-MM-dd")</dd>
+
+    <dt class="col-sm-4">Reason</dt>
+    <dd class="col-sm-8">@Model.Reason</dd>
+
+    <dt class="col-sm-4">Status</dt>
+    <dd class="col-sm-8  badge badge-light-success">@Model.RequestStatus</dd>
+
+    <dt class="col-sm-4">Created Date</dt>
+    <dd class="col-sm-8">@Model.CreatedDate.ToString("yyyy-MM-dd HH:mm")</dd>
+
+    <!-- New Fields -->
+    <dt class="col-sm-4">Medical Certificate Issuer</dt>
+    <dd class="col-sm-8">@Model.MedicalCertificateIssuer</dd>
+
+    <dt class="col-sm-4">Attachment</dt>
+    <dd class="col-sm-8">
+        @if (!string.IsNullOrEmpty(Model.AttachmentPath))
+        {
+            <a href="@Url.Content(Model.AttachmentPath)" target="_blank" class="btn btn-link btn-sm">View Attachment</a>
+        }
+        else
+        {
+            <span class="text-muted">No attachment</span>
+        }
+    </dd>
+</dl>

@@ -1,0 +1,70 @@
+﻿@model Hero.Models.LeaveRequest
+
+@{
+    ViewData["Title"] = "Leave Request Details";
+}
+
+<div class="d-flex align-items-center mb-6">
+    <i class="bi bi-eye text-primary fs-2 me-2"></i>
+    <h1 class="fw-bold text-dark m-0">Leave Request Details</h1>
+</div>
+
+<div class="card shadow-lg border-0 rounded-4">
+    <div class="card-body p-5">
+        <dl class="row">
+            <dt class="col-sm-3 fw-bold">Start Date</dt>
+            <dd class="col-sm-9">@Model.RequestStartDate.ToString("yyyy-MM-dd")</dd>
+
+            <dt class="col-sm-3 fw-bold">End Date</dt>
+            <dd class="col-sm-9">@Model.RequestEndDate.ToString("yyyy-MM-dd")</dd>
+
+            <dt class="col-sm-3 fw-bold">Personal Start Time</dt>
+            <dd class="col-sm-9">@(Model.PersonalStartTime.HasValue ? Model.PersonalStartTime.Value.ToString(@"hh\:mm") : "No data")</dd>
+
+            <dt class="col-sm-3 fw-bold">Personal End Time</dt>
+            <dd class="col-sm-9">@(Model.PersonalEndTime.HasValue ? Model.PersonalEndTime.Value.ToString(@"hh\:mm") : "No data")</dd>
+
+            <dt class="col-sm-3 fw-bold">Leave Type</dt>
+            <dd class="col-sm-9">@Model.LeaveType?.TypeName ?? "No data"</dd>
+
+            <dt class="col-sm-3 fw-bold">Status</dt>
+            <dd class="col-sm-9">
+                <span class="badge
+                    @(Model.RequestStatus == "Approved" ? "bg-success" :
+                      Model.RequestStatus == "Rejected" ? "bg-danger" :
+                      "bg-primary")">
+                    @Model.RequestStatus
+                </span>
+            </dd>
+
+            <dt class="col-sm-3 fw-bold">Reason</dt>
+            <dd class="col-sm-9">@(string.IsNullOrWhiteSpace(Model.Reason) ? "No data" : Model.Reason)</dd>
+
+            <dt class="col-sm-3 fw-bold">Medical Certificate Issuer</dt>
+            <dd class="col-sm-9">@(string.IsNullOrWhiteSpace(Model.MedicalCertificateIssuer) ? "No data" : Model.MedicalCertificateIssuer)</dd>
+
+            <dt class="col-sm-3 fw-bold">Attachment</dt>
+            <dd class="col-sm-9">
+                @if (!string.IsNullOrWhiteSpace(Model.AttachmentPath))
+                {
+                    <img src="@Url.Content(Model.AttachmentPath)"
+                         alt="Attachment"
+                         class="img-thumbnail mb-2 d-block"
+                         style="max-width: 220px; border-radius: 10px;" />
+                    <a href="@Url.Content(Model.AttachmentPath)" target="_blank" class="btn btn-sm btn-outline-primary">
+                        <i class="bi bi-box-arrow-up-right me-1"></i> View Full
+                    </a>
+                }
+                else
+                {
+                    <p class="text-muted mb-0">No attachment</p>
+                }
+            </dd>
+        </dl>
+    </div>
+    <div class="card-footer d-flex justify-content-end">
+        <a asp-action="Index" class="btn btn-light">
+            <i class="bi bi-arrow-left-circle me-1"></i> Back
+        </a>
+    </div>
+</div>

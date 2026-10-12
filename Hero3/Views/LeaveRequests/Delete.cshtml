@@ -1,0 +1,53 @@
+﻿@model Hero.Models.LeaveRequest
+
+@{
+    ViewData["Title"] = "Delete Leave Request";
+    string FormatValue(string value) => string.IsNullOrWhiteSpace(value) ? "No data" : value;
+}
+
+<div class="d-flex align-items-center mb-6">
+    <i class="bi bi-trash text-danger fs-2 me-2"></i>
+    <h1 class="fw-bold text-dark m-0">Delete Leave Request</h1>
+</div>
+
+<div class="card shadow-lg border-0 rounded-4">
+    <div class="card-body p-5">
+        <p class="text-muted">Are you sure you want to delete this leave request?</p>
+
+        <dl class="row">
+            <dt class="col-sm-3 fw-bold">Start Date</dt>
+            <dd class="col-sm-9">@Model.RequestStartDate.ToString("yyyy-MM-dd")</dd>
+
+            <dt class="col-sm-3 fw-bold">End Date</dt>
+            <dd class="col-sm-9">@Model.RequestEndDate.ToString("yyyy-MM-dd")</dd>
+
+            <dt class="col-sm-3 fw-bold">Leave Type</dt>
+            <dd class="col-sm-9">@FormatValue(Model.LeaveType?.TypeName)</dd>
+
+            <dt class="col-sm-3 fw-bold">Reason</dt>
+            <dd class="col-sm-9">@FormatValue(Model.Reason)</dd>
+
+            <dt class="col-sm-3 fw-bold">Status</dt>
+            <dd class="col-sm-9">
+                <span class="badge
+                    @(Model.RequestStatus == "Approved" ? "bg-success" :
+                      Model.RequestStatus == "Rejected" ? "bg-danger" :
+                      "bg-primary")">
+                    @Model.RequestStatus
+                </span>
+            </dd>
+        </dl>
+    </div>
+
+    <div class="card-footer d-flex justify-content-end">
+        <form asp-action="DeleteCurrent" method="post" class="me-3">
+            <input type="hidden" asp-for="LeaveRequestId" />
+            <button type="submit" class="btn btn-danger">
+                <i class="bi bi-trash3 me-1"></i> Yes, Delete
+            </button>
+        </form>
+        <a asp-action="Index" class="btn btn-light">
+            <i class="bi bi-arrow-left-circle me-1"></i> Cancel
+        </a>
+    </div>
+</div>

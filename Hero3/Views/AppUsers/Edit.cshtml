@@ -1,0 +1,74 @@
+﻿@* @model Hero.Models.ApplicationUser *@
+
+@* @{ *@
+@*     ViewData["Title"] = "Edit"; *@
+@* } *@
+
+@* <h1>Edit</h1> *@
+
+@* <h4>ApplicationUser</h4> *@
+@* <hr /> *@
+@* <div class="row"> *@
+@*     <div class="col-md-4"> *@
+@*         <form asp-action="Edit"> *@
+@*             <div asp-validation-summary="ModelOnly" class="text-danger"></div> *@
+@*             <input type="hidden" asp-for="Id" /> *@
+@*             <div class="form-group"> *@
+@*                 <label asp-for="UserName" class="control-label"></label> *@
+@*                 <input asp-for="UserName" class="form-control" /> *@
+@*                 <span asp-validation-for="UserName" class="text-danger"></span> *@
+@*             </div> *@
+@*             <div class="form-group"> *@
+@*                 <label asp-for="UserEmail" class="control-label"></label> *@
+@*                 <input asp-for="UserEmail" class="form-control" /> *@
+@*                 <span asp-validation-for="UserEmail" class="text-danger"></span> *@
+@*             </div> *@
+@*             <div class="form-group"> *@
+@*                 <label asp-for="UserPhone" class="control-label"></label> *@
+@*                 <input asp-for="UserPhone" class="form-control" /> *@
+@*                 <span asp-validation-for="UserPhone" class="text-danger"></span> *@
+@*             </div> *@
+@*             <div class="form-group"> *@
+@*                 <label asp-for="UserPosition" class="control-label"></label> *@
+@*                 <input asp-for="UserPosition" class="form-control" /> *@
+@*                 <span asp-validation-for="UserPosition" class="text-danger"></span> *@
+@*             </div> *@
+@*             <div class="form-group"> *@
+@*                 <label asp-for="UserDepartment" class="control-label"></label> *@
+@*                 <input asp-for="UserDepartment" class="form-control" /> *@
+@*                 <span asp-validation-for="UserDepartment" class="text-danger"></span> *@
+@*             </div> *@
+@*             <div class="form-group"> *@
+@*                 <label asp-for="Role" class="control-label"></label> *@
+@*                 <input asp-for="Role" class="form-control" /> *@
+@*                 <span asp-validation-for="Role" class="text-danger"></span> *@
+@*             </div> *@
+@*             <div class="form-group"> *@
+@*                 <label asp-for="HireDate" class="control-label"></label> *@
+@*                 <input asp-for="HireDate" class="form-control" /> *@
+@*                 <span asp-validation-for="HireDate" class="text-danger"></span> *@
+@*             </div> *@
+@*             <div class="form-group"> *@
+@*                 <label asp-for="AnnualLeaveBalance" class="control-label"></label> *@
+@*                 <input asp-for="AnnualLeaveBalance" class="form-control" /> *@
+@*                 <span asp-validation-for="AnnualLeaveBalance" class="text-danger"></span> *@
+@*             </div> *@
+@*             <div class="form-group"> *@
+@*                 <label asp-for="LineManagerId" class="control-label"></label> *@
+@*                 <select asp-for="LineManagerId" class="form-control" asp-items="ViewBag.LineManagerId"></select> *@
+@*                 <span asp-validation-for="LineManagerId" class="text-danger"></span> *@
+@*             </div> *@
+@*             <div class="form-group"> *@
+@*                 <input type="submit" value="Save" class="btn btn-primary" /> *@
+@*             </div> *@
+@*         </form> *@
+@*     </div> *@
+@* </div> *@
+
+@* <div> *@
+@*     <a asp-action="Index">Back to List</a> *@
+@* </div> *@
+
+@* @section Scripts { *@
+@*     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");} *@
+@* } *@

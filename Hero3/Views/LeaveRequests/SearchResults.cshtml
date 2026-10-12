@@ -1,0 +1,61 @@
+﻿@model IEnumerable<Hero.Models.LeaveRequest>
+
+<div class="card">
+    <!-- Card header -->
+    <div class="card-header border-0 pt-6">
+        <h3 class="card-title">Search Results</h3>
+    </div>
+
+    <!-- Card body -->
+    <div class="card-body pt-0">
+        <div class="table-responsive">
+            <table class="table align-middle table-row-dashed fs-6 gy-5">
+                <thead>
+                    <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Status</th>
+                        <th>Reason</th>
+                        <th>Medical Issuer</th>
+                        <th>User</th>
+                    </tr>
+                </thead>
+                <tbody class="fw-semibold text-gray-600">
+                    @if (Model != null && Model.Any())
+                    {
+                        foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.RequestStartDate.ToString("dd/MM/yyyy")</td>
+                                <td>@item.RequestEndDate.ToString("dd/MM/yyyy")</td>
+                                <td>
+                                    @if (item.RequestStatus == "Approved")
+                                    {
+                                        <span class="badge badge-light-success">Approved</span>
+                                    }
+                                    else if (item.RequestStatus == "Rejected")
+                                    {
+                                        <span class="badge badge-light-danger">Rejected</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge badge-light-warning">Pending</span>
+                                    }
+                                </td>
+                                <td>@item.Reason</td>
+                                <td>@item.MedicalCertificateIssuer</td>
+                                <td>@item.ApplicationUser?.UserName</td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="6" class="text-center text-muted">No results found</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

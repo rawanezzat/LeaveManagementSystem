@@ -1,0 +1,457 @@
+﻿@model IEnumerable<Hero.Models.LeaveRequest>
+
+@{
+    ViewData["Title"] = "Leave Requests";
+    var isEmployee = User.IsInRole("Employee");
+    var isAdmin = User.IsInRole("Admin") || User.IsInRole("HR") || User.IsInRole("Manager");
+
+}
+<!-- Tabs -->
+<ul class="nav nav-tabs mb-6">
+    @if (isEmployee)
+    {
+        <li class="nav-item">
+            <a class="nav-link active fw-bold" data-bs-toggle="tab" href="#employee-dashboard">
+                <i class="bi bi-person-badge me-2"></i>Employee
+            </a>
+        </li>
+    }
+
+    @if (isAdmin)
+    {
+        <li class="nav-item">
+            <a class="nav-link @(isEmployee ? "" : "active") fw-bold" data-bs-toggle="tab" href="#admin-dashboard">
+                <i class="bi bi-shield-lock me-2"></i>Admin
+            </a>
+        </li>
+    }
+</ul>
+
+
+<div class="tab-content">
+    @* ================= EMPLOYEE DASHBOARD ================= *@
+    @if (isEmployee)
+    {
+        <div class="tab-pane fade show active" id="employee-dashboard">
+            <div class="row g-6 mb-6">
+                @* Summary Cards *@
+                <div class="col-md-3">
+                    <div class="card shadow-sm">
+                        <div class="card-body d-flex align-items-center">
+                            <div class="symbol symbol-50px me-4">
+                                <span class="symbol-label bg-light-primary">
+                                    <i class="bi bi-calendar-check fs-2 text-primary"></i>
+                                </span>
+                            </div>
+                            <div>
+                                <div class="fw-bold fs-4">
+                                    @(ViewBag.TotalCount == 0 ? "No data" : ViewBag.TotalCount)
+                                </div>
+                                <div class="text-muted">Total Requests</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card shadow-sm">
+                        <div class="card-body d-flex align-items-center">
+                            <div class="symbol symbol-50px me-4">
+                                <span class="symbol-label bg-light-success">
+                                    <i class="bi bi-check-circle fs-2 text-success"></i>
+                                </span>
+                            </div>
+                            <div>
+                                <div class="fw-bold fs-4">
+                                    @(ViewBag.ApprovedCount == 0 ? "No data" : ViewBag.ApprovedCount)
+                                </div>
+                                <div class="text-muted">Approved</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card shadow-sm">
+                        <div class="card-body d-flex align-items-center">
+                            <div class="symbol symbol-50px me-4">
+                                <span class="symbol-label bg-light-warning">
+                                    <i class="bi bi-hourglass-split fs-2 text-warning"></i>
+                                </span>
+                            </div>
+                            <div>
+                                <div class="fw-bold fs-4">
+                                    @(ViewBag.PendingCount == 0 ? "No data" : ViewBag.PendingCount)
+                                </div>
+                                <div class="text-muted">Pending</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card shadow-sm">
+                        <div class="card-body d-flex align-items-center">
+                            <div class="symbol symbol-50px me-4">
+                                <span class="symbol-label bg-light-danger">
+                                    <i class="bi bi-x-circle fs-2 text-danger"></i>
+                                </span>
+                            </div>
+                            <div>
+                                <div class="fw-bold fs-4">
+                                    @(ViewBag.RejectedCount == 0 ? "No data" : ViewBag.RejectedCount)
+                                </div>
+                                <div class="text-muted">Rejected</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Leave Balance & Apply New Leave -->
+            <div class="row g-6 mb-6">
+                <div class="col-md-6">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-body d-flex flex-column justify-content-center align-items-center py-10">
+                            <i class="bi bi-pie-chart fs-1 text-info mb-3"></i>
+                            <h4 class="fw-bold">Leave Balance</h4>
+                            <p class="text-muted text-center">
+                                You have <span class="fw-bold text-dark">@ViewBag.AnnualLeaveBalance days</span> remaining
+                            </p>
+                            @if (isAdmin)
+                            {
+                                <form asp-action="ResetLeaveBalance" method="post" class="mt-2">
+                                    <button type="submit" class="btn btn-outline-info btn-sm" onclick="return confirm('Are you sure you want to reset your leave balance to 21 days?')">
+                                        <i class="bi bi-arrow-clockwise me-1"></i> Reset Balance
+                                    </button>
+                                </form>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-body d-flex flex-column justify-content-center align-items-center py-10">
+                            <i class="bi bi-file-earmark-plus fs-1 text-primary mb-3"></i>
+                            <h4 class="fw-bold">Request New Leave</h4>
+                            <p class="text-muted text-center">Submit a new leave request for approval.</p>
+                            <a asp-controller="LeaveRequests" asp-action="Create" class="btn btn-primary mt-3">Apply Now</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <!-- Page Header -->
+            <div class="d-flex align-items-center justify-content-between mb-6">
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-calendar-check text-primary fs-2 me-2"></i>
+                    <h1 class="fw-bold text-dark m-0">Leave Requests</h1>
+                </div>
+
+
+            </div>
+
+            <!-- Card -->
+            <div class="card shadow-sm border-0 rounded-4">
+                <div class="card-body p-5">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle w-100">
+                            <thead class="bg-light">
+                                <tr>
+                                    @* <th class="fw-semibold text-muted">User</th> *@
+                                    <th class="fw-semibold text-muted">Start Date</th>
+                                    <th class="fw-semibold text-muted">End Date</th>
+                                    <th class="fw-semibold text-muted">Status</th>
+                                    <th class="fw-semibold text-muted">Leave Type</th>
+                                    <th class="fw-semibold text-muted text-end">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.Any())
+                                {
+                                    foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            @* <td>@item.ApplicationUser?.UserName</td> *@
+                                            <td>@item.RequestStartDate.ToString("yyyy-MM-dd")</td>
+                                            <td>@item.RequestEndDate.ToString("yyyy-MM-dd")</td>
+                                            <td>
+                                                <span class="badge
+                                        @(item.RequestStatus == "Approved" ? "badge-light-success" :
+                                          item.RequestStatus == "Rejected" ? "badge-light-danger" :
+                                          "badge-light-primary")">
+                                                    @item.RequestStatus
+                                                </span>
+                                            </td>
+                                            <td>@item.LeaveType?.TypeName</td>
+                                            <td class="text-end">
+                                                <div class="btn-group">
+                                                    <!-- Details -->
+                                                    <button type="button" class="btn btn-outline-secondary btn-sm rounded-pill"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#detailsModal-@item.LeaveRequestId">
+                                                        <i class="bi bi-eye me-1"></i> Details
+                                                    </button>
+                                                    <!-- Edit -->
+                                                    <a asp-action="Edit" asp-controller="LeaveRequests" asp-route-id="@item.LeaveRequestId"
+                                                       class="btn btn-outline-primary btn-sm rounded-pill">
+                                                        <i class="bi bi-pencil me-1"></i> Edit
+                                                    </a>
+
+
+                                                    <!-- Delete -->
+                                                    <button type="button" class="btn btn-outline-danger btn-sm rounded-pill"
+                                                            data-bs-toggle="modal" data-bs-target="#deleteModal-@item.LeaveRequestId">
+                                                        <i class="bi bi-trash me-1"></i> Delete
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="6" class="text-center text-muted py-4">
+                                            <i class="bi bi-inbox fs-3 d-block mb-2"></i>
+                                            No leave requests found.
+                                        </td>
+                                    </tr>
+                                }
+
+                            </tbody>
+                        </table>
+                        @foreach (var item in Model)
+                        {
+                            <!-- Details Modal -->
+                            <div class="modal fade" id="detailsModal-@item.LeaveRequestId" tabindex="-1">
+                                <div class="modal-dialog modal-lg modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">Request Details</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            @await Html.PartialAsync("_DetailsPartial", item)
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                           
+
+
+                            <!-- Delete Modal -->
+                            <div class="modal fade" id="deleteModal-@item.LeaveRequestId" tabindex="-1">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">Delete Request</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            @await Html.PartialAsync("_DeletePartial", item)
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    }
+
+    @* ================= ADMIN / HR / MANAGER DASHBOARD ================= *@
+
+    @if (isAdmin)
+    {
+        <div class="tab-pane fade @(isEmployee ? "" : "show active")" id="admin-dashboard">
+            <div class="row g-6 mb-6">
+                @* Summary Cards *@
+                <div class="col-md-3">
+                    <div class="card shadow-sm">
+                        <div class="card-body d-flex align-items-center">
+                            <div class="symbol symbol-50px me-4">
+                                <span class="symbol-label bg-light-primary">
+                                    <i class="bi bi-calendar-check fs-2 text-primary"></i>
+                                </span>
+                            </div>
+                            <div>
+                                <div class="fw-bold fs-4">
+                                    @(ViewBag.TotalCount == 0 ? "No data" : ViewBag.TotalCount)
+                                </div>
+                                <div class="text-muted">Total Requests</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card shadow-sm">
+                        <div class="card-body d-flex align-items-center">
+                            <div class="symbol symbol-50px me-4">
+                                <span class="symbol-label bg-light-success">
+                                    <i class="bi bi-check-circle fs-2 text-success"></i>
+                                </span>
+                            </div>
+                            <div>
+                                <div class="fw-bold fs-4">
+                                    @(ViewBag.ApprovedCount == 0 ? "No data" : ViewBag.ApprovedCount)
+                                </div>
+                                <div class="text-muted">Approved</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card shadow-sm">
+                        <div class="card-body d-flex align-items-center">
+                            <div class="symbol symbol-50px me-4">
+                                <span class="symbol-label bg-light-warning">
+                                    <i class="bi bi-hourglass-split fs-2 text-warning"></i>
+                                </span>
+                            </div>
+                            <div>
+                                <div class="fw-bold fs-4">
+                                    @(ViewBag.PendingCount == 0 ? "No data" : ViewBag.PendingCount)
+                                </div>
+                                <div class="text-muted">Pending</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card shadow-sm">
+                        <div class="card-body d-flex align-items-center">
+                            <div class="symbol symbol-50px me-4">
+                                <span class="symbol-label bg-light-danger">
+                                    <i class="bi bi-x-circle fs-2 text-danger"></i>
+                                </span>
+                            </div>
+                            <div>
+                                <div class="fw-bold fs-4">
+                                    @(ViewBag.RejectedCount == 0 ? "No data" : ViewBag.RejectedCount)
+                                </div>
+                                <div class="text-muted">Rejected</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @* Pending Approvals Table *@
+            <div class="card shadow-sm mb-6">
+                <div class="card-header">
+                    <h3 class="card-title">Pending Approvals</h3>
+                </div>
+                <div class="card-body">
+                    <table class="table table-hover align-middle">
+                        <thead>
+                            <tr class="fw-bold text-muted">
+                                <th>Employee</th>
+                                <th>Leave Type</th>
+                                <th>Duration</th>
+                                <th>Created Date</th>
+                                <th>Status</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (!Model.Any())
+                            {
+                                <tr>
+                                    <td colspan="4" class="text-center text-muted py-4">
+                                        <i class="bi bi-inbox fs-3 d-block mb-2"></i>
+                                        <span class="fw-semibold">No requests found</span>
+                                    </td>
+                                </tr>
+                            }
+                            else
+                            {
+
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@item.ApplicationUser?.UserName</td> <!-- Employee -->
+                                    <td>@item.LeaveType?.TypeName</td> <!-- Leave Type -->
+                                    <td>@((item.RequestEndDate - item.RequestStartDate).Days + 1) days</td>
+                                    <td>@item.CreatedDate.ToString("yyyy-MM-dd")</td> <!-- Submitted -->
+                                        <td>
+                                            @if (item.RequestStatus == "Approved")
+                                            {
+                                                <span class="badge badge-light-success">@item.RequestStatus</span>
+                                            }
+                                            else if (item.RequestStatus == "Rejected")
+                                            {
+                                                <span class="badge badge-light-danger">@item.RequestStatus</span>
+                                            }
+                                            else if (item.RequestStatus == "Pending")
+                                            {
+                                                <span class="badge badge-light-primary">@item.RequestStatus</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge badge-light-secondary">@item.RequestStatus</span>
+                                            }
+                                        </td>
+
+                                        <td class="text-end">
+                                            <div class="btn-group" role="group">
+                                                <!-- Details -->
+                                                <button type="button" class="btn btn-outline-secondary btn-sm rounded-pill"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#detailsModal-@item.LeaveRequestId">
+                                                    <i class="bi bi-eye me-1"></i> Details
+                                                </button>
+
+                                                @if (item.RequestStatus == "Pending")
+                                                {
+                                                    <!-- Approve -->
+                                                    <form asp-action="ApproveRequest" asp-route-id="@item.LeaveRequestId" method="post" class="d-inline">
+                                                        <button type="submit" class="btn btn-outline-success btn-sm rounded-pill">
+                                                            <i class="bi bi-check-circle me-1"></i> Approve
+                                                        </button>
+                                                    </form>
+
+                                                    <!-- Reject -->
+                                                    <form asp-action="RejectRequest" asp-route-id="@item.LeaveRequestId" method="post" class="d-inline">
+                                                        <button type="submit" class="btn btn-outline-danger btn-sm rounded-pill">
+                                                            <i class="bi bi-x-circle me-1"></i> Reject
+                                                        </button>
+                                                    </form>
+                                                }
+                                            </div>
+                                        </td>
+
+
+
+                                </tr>
+                            }
+                            }
+                        </tbody>
+
+                    </table>
+                    @foreach (var item in Model)
+                    {
+                        <!-- Details Modal -->
+                        <div class="modal fade" id="detailsModal-@item.LeaveRequestId" tabindex="-1">
+                            <div class="modal-dialog modal-lg modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Request Details</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        @await Html.PartialAsync("_DetailsPartial", item)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                </div>
+            </div>
+        </div>
+    }
+</div>
